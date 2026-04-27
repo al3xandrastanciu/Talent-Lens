@@ -79,4 +79,23 @@ Create a PostgreSQL database named `hrdb`.
 cd hr-platform/hr-platform
 # Configure database credentials in src/main/resources/application-dev.properties
 ./mvnw spring-boot:run
-# Runs on http://localhost:8080
+Runs on http://localhost:8080
+```
+### 3. ML Service
+```bash
+cd hr_platform-ml
+pip install -r requirements.txt
+python app.py
+# Runs on http://localhost:5000
+```
+### 4. Frontend
+```bash
+cd hr-platform-frontend
+npm install
+npm start
+# Runs on http://localhost:3000
+```
+
+
+
+
