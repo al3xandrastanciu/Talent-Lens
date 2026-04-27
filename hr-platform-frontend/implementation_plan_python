@@ -1,0 +1,72 @@
+# Plan de Implementare: Microserviciu Python ML pentru Calcularea Scorului
+
+Acest plan descrie pașii pentru crearea unui microserviciu independent în Python care va procesa CV-urile și va returna un scor de compatibilitate (match score) față de cerințele jobului.
+
+## User Review Required
+
+> [!IMPORTANT]
+> - Microserviciul va rula pe portul `5000` implicit.
+> - Va fi necesară instalarea Python (versiunea 3.9+) și a librăriilor `flask`, `scikit-learn` și `nltk`.
+> - Algoritmul ales: **TF-IDF Vectorization** combinat cu **Cosine Similarity**. Este standardul în industrie pentru compararea documentelor text.
+
+## Modificări Propuse
+
+---
+
+### 1. Microserviciul Python (`hr-ml-service`)
+
+Vom crea un nou folder denumit `hr-ml-service` care va conține:
+
+#### [NEW] `requirements.txt`
+Fișierul cu dependențe:
+- `flask` (server web)
+- `scikit-learn` (algoritmi ML)
+- `nltk` (procesare text/NLP)
+- `flask-cors` (pentru a permite apeluri între servicii)
+
+#### [NEW] `app.py`
+Logica principală a aplicației:
+- **Endpoint:** `POST /classify`
+- **Funcționalitate:**
+    1. Primește `cv_text` și `job_requirements`.
+    2. Curăță textul: elimină caracterele speciale, stopwords (cuvinte comune precum "și", "dar") și trece totul la litere mici.
+    3. Transformă textele în vectori numerici folosind **TF-IDF**.
+    4. Calculează **Cosine Similarity** între cei doi vectori.
+    5. Extrage „abilitățile potrivite” (matched skills) printr-o listă de cuvinte cheie.
+    6. Returnează scorul (între 0 și 1) și listele de abilități.
+
+---
+
+### 2. Integrare Backend (Spring Boot)
+
+#### [MODIFY] [ClassificationService.java](file:///c:/Users/Alexandra/Desktop/LICENTA-app/hr-platform/hr-platform/src/main/java/com/alexandra/hr_platform/service/ClassificationService.java)
+- Vom actualiza metoda `classify` pentru a trimite datele reale către `http://localhost:5000/classify`.
+- Vom salva rezultatul (scorul și abilitățile) în baza de date PostgreSQL.
+
+#### [MODIFY] `application-dev.yml` (sau `application.properties`)
+- Adăugăm variabila `ml.service.url=http://localhost:5000`.
+
+---
+
+### 3. Frontend (Dashboard Recrutor)
+
+#### [MODIFY] [JobApplications.js](file:///c:/Users/Alexandra/Desktop/LICENTA-app/hr-platform-frontend/src/pages/recruiter/JobApplications.js)
+- Afișăm scorul generat sub formă de **Progress Bar** (Bară de progres) colorată:
+    - Verde: Scor > 70%
+    - Galben: Scor 40-70%
+    - Roșu: Scor < 40%
+
+---
+
+## Întrebări Deschise
+
+> [!CAUTION]
+> 1. Ai Python instalat pe acest calculator? Dacă nu, trebuie instalat pentru a rula acest serviciu.
+> 2. Te interesează să extragem abilitățile dintr-o listă fixă (hardcoded) sau vrei doar scorul general deocamdată?
+
+## Plan de Verificare
+
+### Verificare Manuală
+1. Rularea serverului Python și testarea endpoint-ului cu un utilitar precum Postman.
+2. Apăsarea butonului de "Calculate Score" în interfața de recrutor și verificarea dacă scorul apare în UI.
+3. Testarea cu un CV care se potrivește foarte bine vs un CV care nu are nicio legătură cu jobul.
