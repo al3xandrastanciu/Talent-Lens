@@ -20,10 +20,7 @@ and workflow.
 
 ---
 
-## Project Structure
 
-Talent-Lens/ ├── hr-platform/ # Spring Boot REST API (port 8080) ├── hr-platform-frontend/ # React SPA (port 3000) └── hr_platform-ml/ # Python Flask ML microservice (port 5000)
----
 
 ## Features
 
