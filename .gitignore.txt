@@ -1,0 +1,32 @@
+# Java build
+target
+.class
+.jar
+
+# IntelliJ
+.idea
+.iml
+
+# Node
+node_modules
+build
+dist
+
+# Python
+__pycache__
+venv
+.pyc
+
+# Uploads locale
+uploads
+
+# Logs
+.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.local
