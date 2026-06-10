@@ -1,101 +1,88 @@
 # TalentLens — AI-Powered HR Recruitment Platform
 
-TalentLens is a full-stack HR recruitment platform that uses machine learning 
-to automatically evaluate candidate-job compatibility. It supports two user 
-roles — **Candidates** and **Recruiters** — each with a dedicated dashboard 
-and workflow.
+TalentLens is a modern, full-stack HR recruitment platform that leverages advanced Machine Learning and Generative AI to automatically evaluate candidate-job compatibility. It supports two distinct user roles — **Candidates** and **Recruiters** — each featuring a dedicated dashboard and secure workflow.
 
 ---
 
-## Tech Stack
+## 🛠️ Tech Stack
 
 | Layer | Technology |
 |---|---|
-| Backend | Java 21, Spring Boot 3.5, Spring Security |
-| Frontend | React 18, Tailwind CSS v3, React Router |
-| ML Service | Python, Flask, scikit-learn, NLTK |
-| Database | PostgreSQL |
-| CV Parsing | Apache Tika |
-| Migrations | Flyway |
+| **Backend** | Java 21, Spring Boot 3.5, Spring Security, JWT, BCrypt |
+| **Frontend** | React 18, Tailwind CSS v3, React Router, Axios |
+| **ML Service** | Python, Flask, scikit-learn, NLTK, **Google Gemini LLM** |
+| **Database** | PostgreSQL, Flyway Migrations |
+| **Parsing** | PyPDF2, Apache Tika |
 
 ---
 
-
-
-## Features
+## ✨ Features
 
 ### For Candidates
-- Register and log in as a candidate
+- Secure registration and JWT-based authentication
 - Browse and search active job postings
-- Upload PDF/DOCX resumes (text auto-extracted)
-- Apply to jobs with a selected resume
+- Upload PDF resumes (text auto-extracted & pre-processed)
+- Apply to jobs using a selected resume
 - Track application status (Pending / Reviewed / Accepted / Rejected)
-- Manage profile, skills and uploaded CVs
+- Manage profile, technical skills, and document library
+- **Receive personalized AI-generated constructive feedback** upon rejection
 
 ### For Recruiters
-- Register and log in as a recruiter
-- Create, edit and close job postings
-- View all applicants per job with AI compatibility scores
-- Run AI analysis on any candidate (ML microservice)
-- See matched and missing skills per candidate
-- Evaluate candidates manually (interview rating, comments, final decision)
+- Dedicated secure recruiter dashboard
+- Create, edit, and close job postings (CRUD operations)
+- View all applicants per job with intelligent compatibility scoring
+- Run in-depth AI analysis on any candidate via the ML microservice
+- View extracted missing/matched skills automatically
+- Evaluate candidates manually (interview rating, executive commentary, final disposition)
 
 ---
 
-## AI Classification Engine
+## 🧠 AI Classification Engine
 
-The ML microservice (`/classify`) receives the extracted CV text and the 
-job requirements, then returns a compatibility score using:
+The ML microservice (`/classify`) acts as a Decision Support System. It receives the extracted CV text and the job requirements, processing them in two distinct phases to return a highly accurate compatibility score:
 
-1. **TF-IDF Cosine Similarity** — semantic text similarity
-2. **NLTK POS Tagging** — extracts skills from job requirements
-3. **Smart Skill Matching** — checks which skills appear in the CV
+1. **Algorithmic Evaluation (TF-IDF & Cosine Similarity):** Mathematical text similarity measuring exact keyword matches.
+2. **Semantic Evaluation (Google Gemini LLM):** Advanced prompt engineering to understand context, synonyms, and experience level.
 
-**Final score formula:**
-score = (skill_score × 0.8) + (tfidf_similarity × 0.2)
+**Final Hybrid Score Formula:**
 
+	Final_Score = (TFIDF_Score × 0.4) + (Gemini_Score × 0.6)
 
-| Score | Label | Color |
+| Score Range | Label | Color Indicator |
 |---|---|---|
-| ≥ 0.70 | HIGH MATCH | 🟢 Green |
-| 0.40 – 0.69 | POTENTIAL | 🟡 Amber |
-| < 0.40 | LOW MATCH | 🔴 Red |
+| **≥ 70%** | HIGH MATCH | 🟢 Green |
+| **40% – 69%** | POTENTIAL | 🟡 Amber |
+| **< 40%** | LOW MATCH | 🔴 Red |
 
 ---
 
-## Getting Started
+## 🚀 Getting Started
 
 ### Prerequisites
 - Java 21
 - Node.js 18+
 - Python 3.10+
 - PostgreSQL
+- Google Gemini API Key
 
-### 1. Database
+### 1. Database Setup
 Create a PostgreSQL database named `hrdb`.
 
-### 2. Backend
-```bash
-cd hr-platform/hr-platform
-# Configure database credentials in src/main/resources/application-dev.properties
-./mvnw spring-boot:run
-Runs on http://localhost:8080
-```
-### 3. ML Service
-```bash
-cd hr_platform-ml
-pip install -r requirements.txt
-python app.py
-# Runs on http://localhost:5000
-```
-### 4. Frontend
-```bash
-cd hr-platform-frontend
-npm install
-npm start
-# Runs on http://localhost:3000
-```
+### 2. Backend (Spring Boot)
+	cd hr-platform/hr-platform
+	# Configure database credentials in src/main/resources/application-dev.properties
+	./mvnw spring-boot:run
+	# The API will run on http://localhost:8080
 
+### 3. ML Service (Python / Flask)
+	cd hr_platform-ml
+	pip install -r requirements.txt
+	# Export your GEMINI_API_KEY environment variable before running
+	python app.py
+	# The ML microservice will run on http://localhost:5000
 
-
-
+### 4. Frontend (React)
+	cd hr-platform-frontend
+	npm install
+	npm start
+	# The web app will launch on http://localhost:3000
